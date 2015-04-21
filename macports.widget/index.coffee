@@ -1,3 +1,4 @@
+# assuming macports is installed in its default location
 command: "/opt/local/bin/port outdated"
 
 refreshFrequency: 43000
@@ -15,6 +16,10 @@ style: """
   .Normal
     font-size: 8pt
 
+  .Clear
+    font-size: 12pt
+    color: #00f
+
 """
 
 
@@ -24,14 +29,17 @@ render: -> """
 update: (output, domEl) ->
   div = $(domEl)
 
-  test=output.split(":")
-  zones=test[1].split("\n")
-
   timeHTML = "<div>"
 
-  timeHTML = timeHTML + "<div class='Header'>" + test[0] + ":</div>"
+  try
 
-  for zone, idx in zones
+    test=output.split(":")
+    zones=test[1].split("\n")
+
+
+    timeHTML = timeHTML + "<div class='Header'>" + test[0] + ":</div>"
+
+    for zone, idx in zones
 
     #if idx == 0
 
@@ -39,10 +47,17 @@ update: (output, domEl) ->
 
     #else
 
-    if zone != ''
+      if zone != ''
 
-      timeHTML = timeHTML + "<div class='Normal'>" + idx + '. ' + zone + "</div>"
+        timeHTML = timeHTML + "<div class='Normal'>" + idx + '. ' + zone + "</div>"
 
-      timeHTML= timeHTML+"</div>"
+
+  catch error
+
+    timeHTML = timeHTML + "<div class='Clear'>" + output + "</div>"
+
+
+  timeHTML= timeHTML+"</div>"
+
 
   div.html(timeHTML)
